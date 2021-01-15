@@ -16,6 +16,12 @@ function App() {
   const [video1, setVideo1] = useState();
   const [video2, setVideo2] = useState();
   const [video3, setVideo3] = useState();
+
+
+  const [vid1Start, setVid1Start] = useState({ "h": "01", "m": "30", "s": "20" });
+  const [vid2Start, setVid2Start] = useState(0);
+  const [vid3Start, setVid3Start] = useState(0);
+
   const [gif, setGif] = useState();
 
   const load = async () => {
@@ -29,6 +35,9 @@ function App() {
   // }
 
   const convertToGif = async () => {
+    console.log(vid1Start);
+
+
     // Write the file to memory 
     //Web assembly is managing its own memory file system, in order to run ffmpeg on the file you need to make it known to the wasm file system
     ffmpeg.FS('writeFile', 'vid1.mp4', await fetchFile(video1)) //take video and save it as test.mp4
@@ -57,6 +66,51 @@ function App() {
     setGif(url);
   }
 
+  const loadVideo = file => new Promise((resolve, reject) => {
+    try {
+      let video = document.createElement('video')
+      video.preload = 'metadata'
+
+      video.onloadedmetadata = function () {
+        resolve(this)
+      }
+
+      video.onerror = function () {
+        reject("Invalid video. Please select a video file.")
+      }
+
+      video.src = window.URL.createObjectURL(file)
+    } catch (e) {
+      reject(e)
+    }
+  })
+
+  const handleVideoInput = async (fileInput, vidNum) => {
+
+    if (vidNum == "vid1") {
+
+      setVideo1(fileInput.target.files?.item(0));
+      const file = await loadVideo(fileInput.currentTarget.files[0]);
+      const duration = new Date(null);
+      duration.setSeconds(file.duration);
+      const time = duration.toISOString().substr(11, 8);
+      console.log(time);
+      const hour = time.substr(0, 2)
+      const min = time.substr(3, 2)
+      const sec = time.substr(6, 2)
+
+      setVid1Start({ "dfdf": 524154545 })
+
+    } else if (vidNum === "vid2") {
+      console.log("vid2");
+      setVideo2(fileInput.target.files?.item(0));
+    } else {
+      console.log("NOT vid 1");
+    }
+
+
+  }
+
   useEffect(() => {
     load();
   }, [])
@@ -67,27 +121,28 @@ function App() {
 
       { video1 && <video
         controls
-        with="250%"
+        width="320" height="240"
         src={URL.createObjectURL(video1)}>
       </video>}
 
+      <TimeFormat videoLength={vid1Start} />
       <hr />
 
       { video2 && <video
         controls
-        with="250%"
+        width="320" height="240"
         src={URL.createObjectURL(video2)}>
       </video>}
 
       <hr />
       { video3 && <video
         controls
-        with="250%"
+        width="320" height="240"
         src={URL.createObjectURL(video3)}>
       </video>}
 
-      <input type="file" accept="video/*" onChange={(e) => setVideo1(e.target.files?.item(0))} />
-      <input type="file" accept="video/*" onChange={(e) => setVideo2(e.target.files?.item(0))} />
+      <input type="file" accept="video/*" onChange={(inputVideo) => handleVideoInput(inputVideo, "vid1")} />
+      <input type="file" accept="video/*" onChange={(inputVideo) => handleVideoInput(inputVideo, "vid2")} />
       <input type="file" accept="video/*" onChange={(e) => setVideo3(e.target.files?.item(0))} />
 
       <h3>Resule</h3>
@@ -96,11 +151,29 @@ function App() {
 
       {gif && <video
         controls
-        with="250%"
+        width="20vw"
         src={gif}></video>}
 
     </div>
   ) : (<p>Loading FFmpeg</p>)
+}
+
+
+const TimeFormat = ({ videoLength }) => {
+  console.log(videoLength);
+
+
+
+  return (<>
+    <DurationDropDown durationInput={videoLength.h} /> : <DurationDropDown durationInput={videoLength.m} /> : <DurationDropDown durationInput={videoLength.s} />
+  </>)
+}
+
+const DurationDropDown = ({ durationInput, place }) => {
+
+  return (<>
+    <button>{durationInput}</button>
+  </>)
 }
 
 export default App;
