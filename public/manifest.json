@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "PWA Video Cut & Merge",
+  "name": "Basic Client-Side Video Editing PWA",
   "icons": [
     {
       "src": "favicon.ico",
