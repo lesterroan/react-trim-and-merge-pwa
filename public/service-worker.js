@@ -1,7 +1,6 @@
-var CACHE_NAME = 'pwa-task-manager';
+var CACHE_NAME = 'video-cut-and-merge-pwa';
 var urlsToCache = [
     '/',
-    '/completed'
 ];
 
 // Install a service worker
@@ -33,7 +32,7 @@ self.addEventListener('fetch', event => {
 
 // Update a service worker
 self.addEventListener('activate', event => {
-    var cacheWhitelist = ['pwa-task-manager'];
+    var cacheWhitelist = ['video-cut-and-merge-pwa'];
     event.waitUntil(
         caches.keys().then(cacheNames => {
             return Promise.all(
