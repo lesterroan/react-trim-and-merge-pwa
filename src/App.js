@@ -1,6 +1,8 @@
 import logo from './logo.svg';
 import { useState, useEffect } from 'react'
 import './App.css';
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
+import Loader from 'react-loader-spinner'
 
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg'
 
@@ -8,6 +10,8 @@ const ffmpeg = createFFmpeg({ log: true });
 
 
 function App() {
+
+  const [isConverting, setIsConverting] = useState(false);
 
   const [ready, setReady] = useState(false);
   const [video1, setVideo1] = useState();
@@ -29,6 +33,8 @@ function App() {
 
   const convertToGif = async () => {
 
+    setIsConverting(true);
+
     ffmpeg.FS('writeFile', 'vid1.mp4', await fetchFile(video1))
     ffmpeg.FS('writeFile', 'vid2.mp4', await fetchFile(video2))
     ffmpeg.FS('writeFile', 'vid3.mp4', await fetchFile(video3))
@@ -37,10 +43,13 @@ function App() {
     await ffmpeg.run("-i", 'vid1.mp4', "-i", 'vid2.mp4', "-i", 'vid3.mp4',
       "-filter_complex", "[0:v:0]trim=start=00:00:00:end=00:00:03,setdar=16/9,scale=1920x1080,setpts=PTS-STARTPTS[v0],[0:a:0]atrim=start=00:00:00:end=00:00:03,asetpts=PTS-STARTPTS[a0],[1:v:0]trim=start=00:00:00:end=00:00:03,setdar=16/9,scale=1920x1080,setpts=PTS-STARTPTS[v1],[1:a:0]atrim=start=00:00:00:end=00:00:03,asetpts=PTS-STARTPTS[a1],[2:v:0]trim=start=00:00:00:end=00:00:03,setdar=16/9,scale=1920x1080,setpts=PTS-STARTPTS[v2],[2:a:0]atrim=start=00:00:00:end=00:00:03,asetpts=PTS-STARTPTS[a2],[v0][a0][v1][a1][v2][a2]concat=n=3:v=1:a=1[outv][outa]", "-vsync", "2", "-map", "[outv]", "-map", "[outa]", '-s', '1920x1080', "output.mp4")
 
+
     const data = ffmpeg.FS('readFile', 'output.mp4');
 
     const url = URL.createObjectURL(new Blob([data.buffer], { type: 'video/mp4' }));
     setFinalVid(url);
+
+    setIsConverting(false);
   }
 
   const loadVideo = file => new Promise((resolve, reject) => {
@@ -92,7 +101,6 @@ function App() {
     load();
   }, [])
 
-  //logical && operator to show the video elem only when video is defined
   return ready ? (
     <div className="App">
 
@@ -145,7 +153,14 @@ function App() {
       <h3>Result</h3>
 
       <button onClick={convertToGif}>Convert</button>
+      <Loader
+        type="ThreeDots"
+        color="#00BFFF"
+        height={50}
+        width={50}
+        visible={isConverting}
 
+      />
       {
         finalVid && <video
           controls
