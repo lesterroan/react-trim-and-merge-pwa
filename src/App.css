@@ -36,3 +36,20 @@
     transform: rotate(360deg);
   }
 }
+
+.centerDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.videoGroup {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.emptyVideo {
+  background-image: linear-gradient(to bottom right, lightgrey, darkgrey);
+}
