@@ -96,7 +96,7 @@ function App() {
   return ready ? (
     <div className="App">
 
-      <h1>Cut and Merge Progressive Web Applications</h1>
+      <h1>Cut* and Merge Progressive Web Application</h1>
       <h3>Made With React and FFmpeg.wasm</h3>
 
       <div className="centerDiv">
@@ -153,8 +153,10 @@ function App() {
           src={finalVid}></video>
       }
 
+      <p>*default: first 3 seconds</p>
+
     </div >
-  ) : (<p>Loading FFmpeg</p>)
+  ) : (<p className="centerDiv">Loading FFmpeg</p>)
 }
 
 
