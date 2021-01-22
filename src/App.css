@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  background: #2f2fa2;
 }
 
 .App-logo {
@@ -44,6 +45,7 @@
 }
 
 .videoGroup {
+  margin-top: 2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -52,4 +54,10 @@
 
 .emptyVideo {
   background-image: linear-gradient(to bottom right, lightgrey, darkgrey);
+}
+
+.cutAndMerge {
+  background: #f64c72;
+  outline: none !important;
+  margin-top: 2rem;
 }

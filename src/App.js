@@ -31,7 +31,7 @@ function App() {
   }
 
 
-  const convertToGif = async () => {
+  const processVideo = async () => {
 
     setIsConverting(true);
 
@@ -73,7 +73,7 @@ function App() {
 
   const handleVideoInput = async (fileInput, vidNum) => {
 
-    if (vidNum == "vid1") {
+    if (vidNum === "vid1") {
 
       setVideo1(fileInput.target.files?.item(0));
       // const file = await loadVideo(fileInput.currentTarget.files[0]);
@@ -150,24 +150,25 @@ function App() {
 
       </div>
 
-      <h3>Result</h3>
+      <div className="videoGroup">
+        {isConverting && <p>Cutting and Merging Video. Please Wait...</p>}
+        <Loader
+          type="ThreeDots"
+          color="#00BFFF"
+          height={50}
+          width={50}
+          visible={isConverting}
 
-      <button onClick={convertToGif}>Convert</button>
-      <Loader
-        type="ThreeDots"
-        color="#00BFFF"
-        height={50}
-        width={50}
-        visible={isConverting}
+        />
+        {
+          finalVid && <video
+            controls
+            width="320" height="240"
+            src={finalVid}></video>
+        }
+        {!isConverting && <button className="cutAndMerge" onClick={processVideo}>Cut and Merge</button>}
 
-      />
-      {
-        finalVid && <video
-          controls
-          width="320" height="240"
-          src={finalVid}></video>
-      }
-
+      </div>
       <p>*default: first 3 seconds</p>
 
     </div >
