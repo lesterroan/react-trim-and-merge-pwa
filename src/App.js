@@ -111,10 +111,10 @@ function App() {
         <div className="videoGroup" >
           {video1 && <video
             controls
-            width="240" height="160"
+            width="360" height="240"
             src={URL.createObjectURL(video1)}>
           </video>}
-          {!video1 && <canvas id="myCanvas" width="240" height="160" className="emptyVideo">
+          {!video1 && <canvas id="myCanvas" width="360" height="240" className="emptyVideo">
           </canvas>}
           {/* <TimeFormat videoLength={vid1Start} /> */}
           <input type="file" accept="video/*" onChange={(inputVideo) => handleVideoInput(inputVideo, "vid1")} />
@@ -124,10 +124,10 @@ function App() {
         <div className="videoGroup">
           {video2 && <video
             controls
-            width="240" height="160"
+            width="360" height="240"
             src={URL.createObjectURL(video2)}>
           </video>}
-          {!video2 && <canvas id="myCanvas" width="240" height="160" className="emptyVideo">
+          {!video2 && <canvas id="myCanvas" width="360" height="240" className="emptyVideo">
           </canvas>}
           <input type="file" accept="video/*" onChange={(e) => setVideo2(e.target.files?.item(0))} />
         </div>
@@ -138,11 +138,11 @@ function App() {
         <div className="videoGroup">
           {video3 && <video
             controls
-            width="240" height="160"
+            width="360" height="240"
             src={URL.createObjectURL(video3)}>
           </video>}
 
-          {!video3 && <canvas id="myCanvas" width="240" height="160" className="emptyVideo">
+          {!video3 && <canvas id="myCanvas" width="360" height="240" className="emptyVideo">
           </canvas>}
 
           <input type="file" accept="video/*" onChange={(e) => setVideo3(e.target.files?.item(0))} />
@@ -151,10 +151,10 @@ function App() {
       </div>
 
       <div className="videoGroup">
-        {isConverting && <p>Cutting and Merging Video. Please Wait...</p>}
+        {isConverting && <p>Cutting and Merging Videos. Please Wait...</p>}
         <Loader
           type="ThreeDots"
-          color="#00BFFF"
+          color="#fa476e"
           height={50}
           width={50}
           visible={isConverting}
@@ -163,14 +163,16 @@ function App() {
         {
           finalVid && <video
             controls
-            width="320" height="240"
+            width="720" height="480"
             src={finalVid}></video>
         }
-        {!isConverting && <button className="cutAndMerge" onClick={processVideo}>Cut and Merge</button>}
+        {!isConverting && <span className="cutAndMerge" onClick={processVideo}>Cut and Merge</span>}
 
       </div>
       <p>*default: first 3 seconds</p>
-
+      <div className="footer">
+        <p>This is a footer</p>
+      </div>
     </div >
   ) : (<p className="centerDiv">Loading FFmpeg</p>)
 }
