@@ -34,7 +34,6 @@ function App() {
   const processVideo = async () => {
 
     setIsConverting(true);
-    setFinalVid(null);
 
     ffmpeg.FS('writeFile', 'vid1.mp4', await fetchFile(video1))
     ffmpeg.FS('writeFile', 'vid2.mp4', await fetchFile(video2))
@@ -42,7 +41,7 @@ function App() {
 
 
     await ffmpeg.run("-i", 'vid1.mp4', "-i", 'vid2.mp4', "-i", 'vid3.mp4',
-      "-filter_complex", "[0:v:0]trim=start=00:01:00:start=00:01:05,setdar=16/9,scale=1920x1080,setpts=PTS-STARTPTS[v0],[0:a:0]atrim=start=00:01:00:start=00:01:05,asetpts=PTS-STARTPTS[a0],[1:v:0]trim=start=00:01:00:start=00:01:05,setdar=16/9,scale=1920x1080,setpts=PTS-STARTPTS[v1],[1:a:0]atrim=start=00:01:00:start=00:01:05,asetpts=PTS-STARTPTS[a1],[2:v:0]trim=start=00:01:00:start=00:01:05,setdar=16/9,scale=1920x1080,setpts=PTS-STARTPTS[v2],[2:a:0]atrim=start=00:01:00:start=00:01:05,asetpts=PTS-STARTPTS[a2],[v0][a0][v1][a1][v2][a2]concat=n=3:v=1:a=1[outv][outa]", "-vsync", "2", "-map", "[outv]", "-map", "[outa]", '-s', '1920x1080', "output.mp4")
+      "-filter_complex", "[0:v:0]trim=start=00:00:00:end=00:00:03,setdar=16/9,scale=1920x1080,setpts=PTS-STARTPTS[v0],[0:a:0]atrim=start=00:00:00:end=00:00:03,asetpts=PTS-STARTPTS[a0],[1:v:0]trim=start=00:00:00:end=00:00:03,setdar=16/9,scale=1920x1080,setpts=PTS-STARTPTS[v1],[1:a:0]atrim=start=00:00:00:end=00:00:03,asetpts=PTS-STARTPTS[a1],[2:v:0]trim=start=00:00:00:end=00:00:03,setdar=16/9,scale=1920x1080,setpts=PTS-STARTPTS[v2],[2:a:0]atrim=start=00:00:00:end=00:00:03,asetpts=PTS-STARTPTS[a2],[v0][a0][v1][a1][v2][a2]concat=n=3:v=1:a=1[outv][outa]", "-vsync", "2", "-map", "[outv]", "-map", "[outa]", '-s', '1920x1080', "output.mp4")
 
 
     const data = ffmpeg.FS('readFile', 'output.mp4');
@@ -170,7 +169,7 @@ function App() {
         {!isConverting && <span className="cutAndMerge" onClick={processVideo}>Cut and Merge</span>}
 
       </div>
-      <p>*default: 00:01:00 to 00:01:05</p>
+      <p>*default: first 3 seconds</p>
       <div className="footer">
         <p>This is a footer</p>
       </div>
