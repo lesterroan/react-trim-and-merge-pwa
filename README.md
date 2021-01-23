@@ -6,7 +6,7 @@ Video Cut and Merge Progressive Web App
 ## Built With
 
 * [React](https://reactjs.org/) 
-* [FFmpeg.wasm](https://maven.apache.org/)
+* [FFmpeg.wasm](https://ffmpegwasm.github.io/)
 
 
 ## Authors
