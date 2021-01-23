@@ -6,12 +6,18 @@ import Loader from 'react-loader-spinner'
 
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg'
 
-const ffmpeg = createFFmpeg({ log: true });
+
+const ffmpeg = createFFmpeg({
+  log: false,
+});
 
 
 function App() {
 
+
   const [isConverting, setIsConverting] = useState(false);
+  const [progress, setProgress] = useState("");
+  const [message, setMessage] = useState("");
 
   const [ready, setReady] = useState(false);
   const [video1, setVideo1] = useState();
@@ -34,14 +40,21 @@ function App() {
   const processVideo = async () => {
 
     setIsConverting(true);
+    setFinalVid(null);
+
+
 
     ffmpeg.FS('writeFile', 'vid1.mp4', await fetchFile(video1))
     ffmpeg.FS('writeFile', 'vid2.mp4', await fetchFile(video2))
     ffmpeg.FS('writeFile', 'vid3.mp4', await fetchFile(video3))
 
 
+
+
+
     await ffmpeg.run("-i", 'vid1.mp4', "-i", 'vid2.mp4', "-i", 'vid3.mp4',
-      "-filter_complex", "[0:v:0]trim=start=00:00:00:end=00:00:03,setdar=16/9,scale=1920x1080,setpts=PTS-STARTPTS[v0],[0:a:0]atrim=start=00:00:00:end=00:00:03,asetpts=PTS-STARTPTS[a0],[1:v:0]trim=start=00:00:00:end=00:00:03,setdar=16/9,scale=1920x1080,setpts=PTS-STARTPTS[v1],[1:a:0]atrim=start=00:00:00:end=00:00:03,asetpts=PTS-STARTPTS[a1],[2:v:0]trim=start=00:00:00:end=00:00:03,setdar=16/9,scale=1920x1080,setpts=PTS-STARTPTS[v2],[2:a:0]atrim=start=00:00:00:end=00:00:03,asetpts=PTS-STARTPTS[a2],[v0][a0][v1][a1][v2][a2]concat=n=3:v=1:a=1[outv][outa]", "-vsync", "2", "-map", "[outv]", "-map", "[outa]", '-s', '1920x1080', "output.mp4")
+      "-filter_complex", "[0:v:0]trim=start=00:00:00:end=00:00:15,setdar=16/9,scale=1920x1080,setpts=PTS-STARTPTS[v0],[0:a:0]atrim=start=00:00:00:end=00:00:15,asetpts=PTS-STARTPTS[a0],[1:v:0]trim=start=00:00:00:end=00:00:15,setdar=16/9,scale=1920x1080,setpts=PTS-STARTPTS[v1],[1:a:0]atrim=start=00:00:00:end=00:00:15,asetpts=PTS-STARTPTS[a1],[2:v:0]trim=start=00:00:00:end=00:00:15,setdar=16/9,scale=1920x1080,setpts=PTS-STARTPTS[v2],[2:a:0]atrim=start=00:00:00:end=00:00:15,asetpts=PTS-STARTPTS[a2],[v0][a0][v1][a1][v2][a2]concat=n=3:v=1:a=1[outv][outa]", "-vsync", "2", "-map", "[outv]", "-map", "[outa]", '-s', '1920x1080', "output.mp4")
+
 
 
     const data = ffmpeg.FS('readFile', 'output.mp4');
@@ -99,15 +112,23 @@ function App() {
 
   useEffect(() => {
     load();
+    ffmpeg.setProgress(({ ratio }) => {
+      if (ratio >= 0 && ratio <= 1) {
+        setProgress(`${(ratio * 100.0).toFixed(2)}%`);
+        console.log((ratio * 100.0).toFixed(2))
+      }
+      if (ratio === 1) {
+        setTimeout(() => { setProgress(""); }, 1000);
+      }
+    });
   }, [])
 
   return ready ? (
     <div className="App">
 
       <h1>Cut* and Merge Progressive Web Application</h1>
-      <h3>Made With React and FFmpeg.wasm</h3>
 
-      <div className="centerDiv">
+      {!isConverting && <div className="centerDiv">
         <div className="videoGroup" >
           {video1 && <video
             controls
@@ -116,7 +137,6 @@ function App() {
           </video>}
           {!video1 && <canvas id="myCanvas" width="360" height="240" className="emptyVideo">
           </canvas>}
-          {/* <TimeFormat videoLength={vid1Start} /> */}
           <input type="file" accept="video/*" onChange={(inputVideo) => handleVideoInput(inputVideo, "vid1")} />
         </div>
 
@@ -149,7 +169,7 @@ function App() {
         </div>
 
       </div>
-
+      }
       <div className="videoGroup">
         {isConverting && <p>Cutting and Merging Videos. Please Wait...</p>}
         <Loader
@@ -167,11 +187,14 @@ function App() {
             src={finalVid}></video>
         }
         {!isConverting && <span className="cutAndMerge" onClick={processVideo}>Cut and Merge</span>}
-
+        <p className="progress">{progress}</p>
+        <p >{message}</p>
       </div>
-      <p>*default: first 3 seconds</p>
+
+      <p>*default: first 15 seconds</p>
+
       <div className="footer">
-        <p>This is a footer</p>
+        <p>Made With React and FFmpeg.wasm</p>
       </div>
     </div >
   ) : (<p className="centerDiv">Loading FFmpeg</p>)
