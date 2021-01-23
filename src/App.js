@@ -19,6 +19,8 @@ function App() {
   const [progress, setProgress] = useState("");
   const [message, setMessage] = useState("");
 
+  const [alert, setAlert] = useState("");
+
   const [ready, setReady] = useState(false);
   const [video1, setVideo1] = useState();
   const [video2, setVideo2] = useState();
@@ -109,6 +111,24 @@ function App() {
 
 
   }
+  const handleCutAndMerge = () => {
+
+    if (video1 === undefined) {
+      handleAlert('Video 1')
+    } else if (video2 === undefined) {
+      handleAlert('Video 2')
+    } else if (video3 === undefined) {
+      handleAlert('Video 3')
+    }
+    else {
+      setAlert(undefined);
+      processVideo();
+    };
+  }
+  const handleAlert = (msg) => {
+    console.log(msg);
+    setAlert(msg)
+  }
 
   useEffect(() => {
     load();
@@ -125,7 +145,7 @@ function App() {
 
   return ready ? (
     <div className="App">
-
+      {alert && <span className="alert">NO {alert} input!</span>}
       <h1>Cut* and Merge Progressive Web Application</h1>
 
       {!isConverting && <div className="centerDiv">
@@ -186,7 +206,7 @@ function App() {
             width="720" height="480"
             src={finalVid}></video>
         }
-        {!isConverting && <span className="cutAndMerge" onClick={processVideo}>Cut and Merge</span>}
+        {!isConverting && <span className="cutAndMerge" onClick={handleCutAndMerge}>Cut and Merge</span>}
         <p className="progress">{progress}</p>
         <p >{message}</p>
       </div>
