@@ -230,7 +230,7 @@ function App() {
       width={50}
       visible={true}
     /></span>
-    <span className="warning">Does not work on Firefox 79+ and Mobile yet, please use Chrome or Edge Desktop</span>
+    <span className="warning">App does not work on Firefox 79+ and Mobile yet, please use Chrome or Edge Desktop</span>
   </div>)
 }
 
