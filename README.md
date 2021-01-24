@@ -20,6 +20,7 @@ Video Cut and Merge Progressive Web App
 * Tori Pope - [Setting up React App as PWA](https://medium.com/@toricpope/transform-a-react-app-into-a-progressive-web-app-pwa-dea336bd96e6)
 
 ## ToDos
+- [ ] Allow Firefox Support by fixing COOP and COEP headers
 - [ ] Allow custom input of trim range (current: first 15 seconds)
 - [ ] Add "Save Video" Button
 - [ ] Allow custom output video resolution (current: 1920x1080)
