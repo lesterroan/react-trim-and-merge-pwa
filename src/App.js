@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import { useState, useEffect } from 'react'
 import './App.css';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
@@ -132,6 +132,13 @@ function App() {
 
   useEffect(() => {
     load();
+
+    ffmpeg.setLogger(({ type, message }) => {
+      if (type !== 'info') {
+        setMessage(message);
+        console.log(message);
+      }
+    });
     ffmpeg.setProgress(({ ratio }) => {
       if (ratio >= 0 && ratio <= 1) {
         setProgress(`${(ratio * 100.0).toFixed(2)}%`);
@@ -172,9 +179,6 @@ function App() {
           <input type="file" accept="video/*" onChange={(e) => setVideo2(e.target.files?.item(0))} />
         </div>
 
-
-
-
         <div className="videoGroup">
           {video3 && <video
             controls
@@ -208,16 +212,26 @@ function App() {
         }
         {!isConverting && <span className="cutAndMerge" onClick={handleCutAndMerge}>Cut and Merge</span>}
         <p className="progress">{progress}</p>
-        <p >{message}</p>
+        {/* <p >{message}</p> */}
       </div>
 
       <p>*default: first 15 seconds</p>
 
       <div className="footer">
-        <p>Made With React and FFmpeg.wasm</p>
+        <p>👨‍💻<a className="githubLink" href="https://github.com/lesterroan/react-trim-and-merge-pwa" target="_blank">Made With React and FFmpeg.wasm</a></p>
       </div>
     </div >
-  ) : (<p className="centerDiv">Loading FFmpeg</p>)
+  ) : (<div className="videoGroup">
+    <span>Loading FFmpeg...please wait</span>
+    <span> <Loader
+      type="ThreeDots"
+      color="#fa476e"
+      height={50}
+      width={50}
+      visible={true}
+    /></span>
+    <span className="warning">Does not work on Firefox 79+ and Mobile yet, please use Chrome or Edge Desktop</span>
+  </div>)
 }
 
 
