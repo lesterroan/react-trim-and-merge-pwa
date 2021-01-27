@@ -1,4 +1,3 @@
-// import logo from './logo.svg';
 import { useState, useEffect } from 'react'
 import './App.css';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
@@ -66,25 +65,6 @@ function App() {
 
     setIsConverting(false);
   }
-
-  const loadVideo = file => new Promise((resolve, reject) => {
-    try {
-      let video = document.createElement('video')
-      video.preload = 'metadata'
-
-      video.onloadedmetadata = function () {
-        resolve(this)
-      }
-
-      video.onerror = function () {
-        reject("Invalid video. Please select a video file.")
-      }
-
-      video.src = window.URL.createObjectURL(file)
-    } catch (e) {
-      reject(e)
-    }
-  })
 
   const handleVideoInput = async (fileInput, vidNum) => {
 
@@ -234,29 +214,5 @@ function App() {
   </div>)
 }
 
-
-const TimeFormat = ({ videoLength }) => {
-  console.log(videoLength);
-
-
-
-  return (<>
-    <div style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: "transparent"
-    }}>
-      <DurationDropDown durationInput={videoLength.h} /> : <DurationDropDown durationInput={videoLength.m} /> : <DurationDropDown durationInput={videoLength.s} />
-    </div>
-  </>)
-}
-
-const DurationDropDown = ({ durationInput, place }) => {
-
-  return (<>
-    <button>{durationInput}</button>
-  </>)
-}
 
 export default App;
